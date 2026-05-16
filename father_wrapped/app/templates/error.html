@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ status_code }} | Папа Wrapped</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+  </head>
+  <body class="min-h-screen overflow-hidden bg-black text-white">
+    <div class="noise"></div>
+    <main class="story-section gradient-final">
+      <div class="content-wrap text-center">
+        <p class="eyebrow">{{ status_code }}</p>
+        <h1 class="section-title mx-auto">{{ title }}</h1>
+        <p class="section-lead mx-auto">{{ message }}</p>
+        <a class="start-button mt-8 inline-flex no-underline" href="/">Вернуться к началу</a>
+      </div>
+    </main>
+  </body>
+</html>

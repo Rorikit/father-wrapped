@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ wrapped.meta.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+  </head>
+  <body>
+    <div class="noise"></div>
+    <div class="vhs-line"></div>
+
+    <div class="fixed left-0 top-0 z-50 h-1.5 w-full bg-white/15">
+      <div id="progressBar" class="h-full w-0 bg-lime-300 shadow-[0_0_24px_rgba(190,242,100,.9)]"></div>
+    </div>
+
+    <div class="fixed right-4 top-5 z-50 flex gap-2">
+      <button id="musicToggle" class="control-button" type="button">Включить музыку</button>
+    </div>
+
+    <audio id="backgroundMusic" src="{{ wrapped.meta.background_music }}" loop preload="none"></audio>
+
+    <main id="story" class="story-shell">
+      <section id="intro" class="story-section gradient-intro">
+        <div class="content-wrap text-center">
+          <p class="eyebrow reveal">Итоги семейной любви</p>
+          <h1 class="mega-title reveal delay-1">{{ wrapped.meta.title }}</h1>
+          <div class="loader-wrap reveal delay-2">
+            <div class="loader-ring"></div>
+            <div>
+              <p class="text-xl font-bold sm:text-2xl">Собираем лучшие воспоминания...</p>
+              <p class="mt-2 text-sm text-white/70">анализируем улыбки, поездки и фирменные фразы</p>
+            </div>
+          </div>
+          <button id="startButton" class="start-button reveal delay-3" type="button">Начать историю</button>
+        </div>
+      </section>
+
+      <section class="story-section gradient-hero">
+        <div class="content-grid">
+          <div>
+            <p class="eyebrow reveal">Главный герой</p>
+            <h2 class="section-title reveal delay-1">{{ wrapped.hero.name }}</h2>
+            <p class="section-lead reveal delay-2">{{ wrapped.hero.description }}</p>
+            <div class="superpower reveal delay-3">{{ wrapped.hero.superpower }}</div>
+          </div>
+          <article class="character-card reveal delay-2">
+            <!-- Замените portrait в memories.json на реальное фото папы. -->
+            <div class="media-frame portrait-frame" data-fallback="Папа">
+              <img src="{{ wrapped.hero.portrait }}" alt="{{ wrapped.hero.name }}" loading="lazy">
+            </div>
+            <div>
+              <p class="text-sm uppercase tracking-[.22em] text-lime-200">Wrapped profile</p>
+              <h3>{{ wrapped.hero.name }}</h3>
+              <p>{{ wrapped.hero.subtitle }}</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="story-section gradient-stats">
+        <div class="content-wrap">
+          <p class="eyebrow reveal">Статистика года и всей жизни</p>
+          <h2 class="section-title reveal delay-1">Цифры, которые знают семейную правду</h2>
+          <div class="stats-grid">
+            {% for stat in wrapped.stats %}
+              <article class="stat-card reveal">
+                <span class="counter" data-target="{{ stat.value }}">0</span><span class="counter-suffix">{{ stat.suffix }}</span>
+                <p>{{ stat.label }}</p>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="story-section gradient-moments">
+        <div class="content-wrap wide">
+          <p class="eyebrow reveal">Топ-5 моментов</p>
+          <h2 class="section-title reveal delay-1">Треки, которые хочется переслушивать</h2>
+          <div class="moments-row">
+            {% for moment in wrapped.top_moments %}
+              <article class="moment-card reveal" style="--i: {{ loop.index }}">
+                <!-- Замените photo на реальные семейные снимки. -->
+                <div class="media-frame moment-photo" data-fallback="{{ loop.index }}">
+                  <img src="{{ moment.photo }}" alt="{{ moment.title }}" loading="lazy">
+                </div>
+                <p class="moment-date">{{ moment.date }}</p>
+                <h3>{{ moment.title }}</h3>
+                <p>{{ moment.description }}</p>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="story-section gradient-eras">
+        <div class="content-wrap wide">
+          <p class="eyebrow reveal">Эры</p>
+          <h2 class="section-title reveal delay-1">Каждый период — отдельный альбом</h2>
+          <div class="era-grid">
+            {% for era in wrapped.eras %}
+              <article class="album-card reveal">
+                <!-- Обложки легко заменить в memories.json. -->
+                <div class="media-frame album-cover" data-fallback="{{ loop.index }}">
+                  <img src="{{ era.cover }}" alt="{{ era.title }}" loading="lazy">
+                </div>
+                <div>
+                  <p>{{ era.years }}</p>
+                  <h3>{{ era.title }}</h3>
+                  <span>{{ era.mood }}</span>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="story-section gradient-favorites">
+        <div class="content-wrap">
+          <p class="eyebrow reveal">Любимые вещи</p>
+          <h2 class="section-title reveal delay-1">Папин личный чарт</h2>
+          <div class="favorites-grid">
+            {% for label, value in wrapped.favorites.items() %}
+              <article class="favorite-pill reveal">
+                <span>{{ label }}</span>
+                <strong>{{ value }}</strong>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="story-section gradient-quotes">
+        <div class="content-wrap text-center">
+          <p class="eyebrow reveal">Семейные цитаты</p>
+          <h2 class="quote-text" id="typewriter" data-quotes='{{ wrapped.quotes | tojson }}'></h2>
+        </div>
+      </section>
+
+      <section class="story-section gradient-gallery">
+        <div class="content-wrap wide">
+          <p class="eyebrow reveal">Фото-воспоминания</p>
+          <h2 class="section-title reveal delay-1">Кадры, где время становится теплее</h2>
+          <div class="gallery-grid">
+            {% for item in wrapped.gallery %}
+              <button class="gallery-item reveal" data-full="{{ item.photo }}" data-title="{{ item.title }}" type="button">
+                <!-- Положите реальные фото в /static/media/photos. -->
+                <div class="media-frame gallery-photo" data-fallback="{{ loop.index }}">
+                  <img src="{{ item.photo }}" alt="{{ item.title }}" loading="lazy">
+                </div>
+                <span>{{ item.title }}</span>
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="story-section gradient-messages">
+        <div class="content-wrap">
+          <p class="eyebrow reveal">Сообщения от семьи</p>
+          <h2 class="section-title reveal delay-1">Голоса, которые всегда рядом</h2>
+          <div class="message-grid">
+            {% for message in wrapped.messages %}
+              <article class="message-card reveal">
+                <h3>{{ message.from }}</h3>
+                <p>{{ message.text }}</p>
+                {% if message.audio %}
+                  <!-- Замените audio на реальные аудиосообщения. -->
+                  <audio controls preload="none" src="{{ message.audio }}"></audio>
+                {% else %}
+                  <span class="audio-placeholder">Аудио можно добавить в memories.json</span>
+                {% endif %}
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="story-section gradient-final">
+        <div class="content-wrap text-center">
+          <p class="eyebrow reveal">Финал</p>
+          <h2 class="mega-title reveal delay-1">{{ wrapped.final.headline }}</h2>
+          <p class="section-lead mx-auto reveal delay-2">{{ wrapped.final.text }}</p>
+          <p class="final-line reveal delay-3">{{ wrapped.final.subline }}</p>
+          <button id="restartButton" class="start-button reveal delay-3" type="button">Посмотреть ещё раз</button>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="photoModal" class="photo-modal">
+      <button id="closeModal" type="button" aria-label="Закрыть">×</button>
+      <img id="modalImage" alt="">
+      <p id="modalTitle"></p>
+    </dialog>
+
+    <script src="{{ url_for('static', path='/js/app.js') }}"></script>
+  </body>
+</html>
