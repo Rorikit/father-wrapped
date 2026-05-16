@@ -78,3 +78,9 @@ def test_render_start_command_uses_port_environment_variable():
     assert service["env"] == "python"
     assert service["buildCommand"] == "pip install -r requirements.txt"
     assert service["startCommand"] == "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+
+
+def test_spaceweb_wsgi_entrypoint_exports_application():
+    import wsgi
+
+    assert callable(wsgi.application)

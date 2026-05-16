@@ -150,3 +150,9 @@ father_wrapped/
 - Static-файлы подключены через `app.mount("/static", StaticFiles(...))`.
 - Templates подключены через `Jinja2Templates`.
 - Пути строятся относительно папки `app`, поэтому проект совместим с Linux-средой Render.
+
+## SpaceWeb hosting
+
+Для SpaceWeb shared hosting добавлены `wsgi.py` и `.htaccess`. Они позволяют запускать FastAPI через Apache `mod_wsgi` с помощью адаптера `a2wsgi`.
+
+Подробная инструкция: `DEPLOY_SPACEWEB.md`.
