@@ -27,9 +27,9 @@ def load_memories() -> dict:
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "wrapped": load_memories(),
         },
     )
@@ -39,9 +39,9 @@ async def index(request: Request):
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     if exc.status_code == status.HTTP_404_NOT_FOUND:
         return templates.TemplateResponse(
+            request,
             "error.html",
             {
-                "request": request,
                 "status_code": 404,
                 "title": "Страница не найдена",
                 "message": "Похоже, эта часть истории ещё не записана.",
@@ -49,9 +49,9 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
             status_code=status.HTTP_404_NOT_FOUND,
         )
     return templates.TemplateResponse(
+        request,
         "error.html",
         {
-            "request": request,
             "status_code": exc.status_code,
             "title": "Что-то пошло не так",
             "message": "Попробуйте обновить страницу или вернуться к началу истории.",
@@ -63,9 +63,9 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
     return templates.TemplateResponse(
+        request,
         "error.html",
         {
-            "request": request,
             "status_code": 500,
             "title": "История на секунду задумалась",
             "message": "Обновите страницу, и альбом продолжит работать.",

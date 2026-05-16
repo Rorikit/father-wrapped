@@ -108,6 +108,14 @@ git push
 
 Render автоматически запустит новый deploy после push в GitHub.
 
+## Проверка тестами
+
+```bash
+pytest
+```
+
+Тесты проверяют рендер главной страницы, отдачу CSS/JS/static-файлов, кастомную 404-страницу, структуру `memories.json` и команду запуска в `render.yaml`.
+
 ## Структура
 
 ```text
@@ -132,6 +140,8 @@ father_wrapped/
   render.yaml
   requirements.txt
   README.md
+  tests/
+    test_app.py
 ```
 
 ## Production notes
